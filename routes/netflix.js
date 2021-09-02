@@ -1,28 +1,35 @@
+var express = require('express');
+var router = express.Router();
+ 
 const axios = require("axios");
 const cheerio = require("cheerio");
-
-export const getHTML = async(keyword)=>{
+var html = "";
+let movie = [];
+async function getHTML(){
     try{
-        return await axios.get("https://www.netflix.com/kr/browse/genre/"+encodeURI(keyword));
+        console.log("getHtml");
+        return await axios.get("https://www.netflix.com/kr/browse/genre/34399");
     }catch(err){
         console.log(err);
     }
 }
 
-export const parsing = async(keyword)=>{
-    const html = await getHTML(keyword);
+async function parsing(){
+    html = await getHTML();
     const $ = cheerio.load(html.data);
     const $rankList = $(".nm-content-horizontal-row-item"); 
-    let movie = [];
-    await Promise.all($rankList.each( async (idx,node)=>{
+     
+    $rankList.each((idx,node)=>{
         movie.push({
             title:$(node).find("span.nm-collections-title-name").text(),
             image:$(node).find("img.nm-collections-title-img").attr('src')
         })
-        
-    }));
-    console.log(movie);
+    });
+    return movie;
 }
-parsing(34399);
+parsing();
+router.get('/', function(req, res,next) {
+    res.send(movie);
+  }); 
 
-export {getHTML, parsing};
+  module.exports = router;
