@@ -17,14 +17,19 @@ async function getHTML(){
 async function parsing(){
     html = await getHTML();
     const $ = cheerio.load(html.data);
-    const $rankList = $(".nm-content-horizontal-row-item"); 
+    const $rankList = $(".nm-collections-row");
      
+    console.log($rankList.length);
     $rankList.each((idx,node)=>{
-        movie.push({
-            title:$(node).find("span.nm-collections-title-name").text(),
-            image:$(node).find("img.nm-collections-title-img").attr('src')
-        })
-    });
+        if($(node).find("h2").text()==="Netflix 인기 콘텐츠"){
+            $(node).find("li").each((i,s)=>{ 
+                movie.push({
+                    title:$(s).find("span.nm-collections-title-name").text(),
+                    image:$(s).find("img.nm-collections-title-img").attr('src')
+                }); 
+        });
+        }
+    }); 
     return movie;
 }
 parsing();
