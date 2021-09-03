@@ -4,14 +4,7 @@ var router = express.Router();
 const db = require('../db');
 
 router.get('/', function(req, res, next) {
-  db.getMovie((rows)=>{
-    res.render('index',{rows:rows});
-  })
-  //res.send('respond with a resource');
+  res.send("main index");
 });
-// router.get('/movie',async(req,res) => {
-//     const movieList = await handleAsync();
-//     console.log(movieList);
-//     res.send(movieList); 
-// });
+
 module.exports = router;
