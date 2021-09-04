@@ -10,11 +10,25 @@ const connection = mysql.createConnection({
 
 function getMovie(callback){
     connection.query('select * from movie',(err,rows,fields)=>{
-        if(err) throw err;
+        if(err) console.log("getMovie err"+err);
+        callback(rows);
+    });
+}
+function getDrama(callback){
+    connection.query('select * from drama',(err,rows,fields)=>{
+        if(err) console.log("getDrama err"+err);
         callback(rows);
     });
 }
 
+function getTv(callback){
+    connection.query('select * from tv',(err,rows,fields)=>{
+        if(err) console.log("getTv err"+err);
+        callback(rows);
+    });
+}
 module.exports = {
-    getMovie
+    getMovie,
+    getDrama,
+    getTv
 }
