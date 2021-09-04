@@ -3,7 +3,7 @@ var router = express.Router();
 const db = require('../db');
 
 router.get('/', function(req, res, next) {
-  db.getMovie((rows)=>{
+  db.getTv((rows)=>{
     res.send(rows);
   });
   
