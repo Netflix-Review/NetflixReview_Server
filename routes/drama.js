@@ -6,7 +6,6 @@ router.get('/', function(req, res, next) {
   db.getDrama((rows)=>{
     res.send(rows);
   });
-  
 });
 
 module.exports = router;
