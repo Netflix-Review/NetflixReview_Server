@@ -28,6 +28,12 @@ function getTv(callback){
     });
 }
 
+function getTvRank(callback){
+    connection.query('select tv.rank from tv',(err,rows,fields)=>{
+        if(err) console.log("getTvRank err"+err);
+        callback(rows);
+    })
+}
 function recommendPlus(id,callback){
     connection.query(`update tv set rank=rank+1 where id=${id}`,(err,row,fields)=>{
         if(err) throw err;
@@ -38,5 +44,7 @@ module.exports = {
     getMovie,
     getDrama,
     getTv,
-    recommendPlus
+    recommendPlus,
+    connection,
+    getTvRank
 }
