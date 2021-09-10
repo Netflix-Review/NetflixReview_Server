@@ -9,15 +9,16 @@ router.post('/',function(req,res){
   const id = req.body.id;
   const rank = req.body.rank;
   const connect = db.connection;
-  if(rank==="추천"){
+  if(rank==="Up"){
       connect.query(`update tv set tv.rank=tv.rank+1 where id='${id}'`,function (err,result){
-       
+        if(err) console.log("Up error"+err);
     });
     connect.query(`select tv.rank from tv where id='${id}'`,function(err,rows,result){
       res.send(rows);
+      
     });
   }
-  else if(rank==='별로'){
+  else if(rank==='Down'){
       connect.query(`update tv set tv.rank=tv.rank-1 where id='${id}'`,function (err,result){
       console.log(result);
       res.send("헐래벌떡은내꺼");
