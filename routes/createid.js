@@ -9,7 +9,6 @@ router.post('/', async  function(req, res) {
     
     const returnData = await insertUser(req.body.email,req.body.password,req.body.username);
     console.log(returnData);
-    const sucess = {}
     res.send(true);
     
 });

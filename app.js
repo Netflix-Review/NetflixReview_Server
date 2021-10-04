@@ -7,7 +7,6 @@ var passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var netflix = require('./routes/netflix');
 var movie = require('./routes/movie');
 var drama = require('./routes/drama');
 var tv = require('./routes/tv');
@@ -34,7 +33,6 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/netflix',netflix);
 app.use('/movie',movie);
 app.use('/drama',drama);
 app.use('/tv',tv);
