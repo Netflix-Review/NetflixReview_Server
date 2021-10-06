@@ -13,7 +13,7 @@ var tv = require('./routes/tv');
 var plus = require('./routes/plus');
 var nlogin = require('./routes/nlogin');
 var login = require('./routes/login');
-var createid = require('./routes/createid');
+var api = require('./routes/api');
 var app = express(); 
 
 // view engine setup
@@ -39,7 +39,7 @@ app.use('/tv',tv);
 app.use('/plus',plus);
 app.use('/nlogin',nlogin);
 app.use('/login',login);
-app.use('/createid',createid);
+app.use('/api',api);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
