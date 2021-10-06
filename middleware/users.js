@@ -22,11 +22,21 @@ module.exports = {
         next();
     },
     isLoggedIn: (req, res, next) => {
-        try{
-            const token = req.headers.au
-        } catch(err){
-            throw err;
-            return 
+        const token = req.body.token;
+        if(!token){
+            return res.status(403).send({
+                message: "a token is required for authentication",
+            });
         }
+        try{
+            const decoded = jwt.verify(token,'SECRETKEY');
+            req.username = decoded;
+            console.log(decoded);
+        } catch(err){
+            return res.status(401).send({
+                message: "Invalid token",
+            });
+        }
+        return next();
     }
 }

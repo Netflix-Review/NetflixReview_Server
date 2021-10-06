@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const db = require('../db');
-const { validateRegister } = require('../middleware/users');
+const { validateRegister, isLoggedIn } = require('../middleware/users');
 const { render } = require('pug');
 
 router.post('/sign-up',validateRegister ,async function(req,res){
@@ -50,6 +50,11 @@ router.post('/login', async function(req,res){
     }) 
 }); 
 
+router.post('/auth', isLoggedIn ,async function(req,res){
+    console.log(req.body);
+    res.send("correct secret");
+});
+
 insertUser = function(email, password, username) {
     return new Promise(function(resolve, reject){
         const sql = 'insert into user (id,password,username) values (?,?,?)';
@@ -93,4 +98,5 @@ loginID = function(email, password) {
         })
     })
 }
+
 module.exports = router;
