@@ -31,9 +31,9 @@ function getTv(callback){
     con.query('select * from tv', (err ,rows)=> {
         if(err) {
             console.error(err)
-            return
+            return err;
         } else {
-            return rows
+            callback(rows);
         }
     });
 }

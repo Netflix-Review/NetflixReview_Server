@@ -31,14 +31,14 @@ router.post('/sign-up',validateRegister ,async function(req,res){
 });
 
 router.post('/login', async function(req,res){
-
     loginID(req.body.email, req.body.password)
     .then(function(results){ 
         const token = jwt.sign({
             username: req.body.username,
-        },'SECRETKEY',{expiresIn:"7d"});
+        },'SECRETKEY',{expiresIn:"5m"});
         return res.status(201).send({
-            message: 'login success',
+            message: "login success",
+            username: results,
             token,
         });
     })
@@ -86,14 +86,14 @@ searchID = function(email, username) {
 
 loginID = function(email, password) {
     return new Promise(function(resolve, reject){
-        const sql = 'select id, password from user where id=? and password=?';
+        const sql = 'select username from user where id=? and password=?';
         const params = [email, password];
         db.con.query(sql, params, function(err,rows,results){
             if(rows.length===0){
                 reject(new Error("id or password error"));
             }
             else {
-                resolve(results);
+                resolve(rows);
             }
         })
     })
