@@ -33,12 +33,13 @@ router.post('/sign-up',validateRegister ,async function(req,res){
 router.post('/login', async function(req,res){
     loginID(req.body.email, req.body.password)
     .then(function(results){ 
+        const username=results[0].username;
         const token = jwt.sign({
-            username: req.body.username,
+            username: req.body.email,
         },'SECRETKEY',{expiresIn:"5m"});
         return res.status(201).send({
             message: "login success",
-            username: results,
+            username,
             token,
         });
     })
