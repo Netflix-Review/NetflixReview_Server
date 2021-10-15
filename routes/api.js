@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const db = require('../db');
-const { validateRegister, isLoggedIn } = require('../middleware/users');
+const { validateRegister, isLoggedIn, validateUsername } = require('../middleware/users');
 const { render } = require('pug');
 
 router.post('/sign-up',validateRegister ,async function(req,res){
@@ -26,7 +26,9 @@ router.post('/sign-up',validateRegister ,async function(req,res){
     })
     .catch(function(err){
         console.log(err);
-        res.send("already have person");
+        res.status(401).send({
+            message: 'already have person',
+        });
     })
 });
 
@@ -35,7 +37,7 @@ router.post('/login', async function(req,res){
     .then(function(results){ 
         const username=results[0].username;
         const token = jwt.sign({
-            username: req.body.email,
+            username: username,
         },'SECRETKEY',{expiresIn:"5m"});
         return res.status(201).send({
             message: "login success",
@@ -51,10 +53,46 @@ router.post('/login', async function(req,res){
     }) 
 }); 
 
+
 router.post('/auth', isLoggedIn ,async function(req,res){
     console.log(req.body);
-    res.send("correct secret");
+    res.status(200).send({
+        message:"correct secret",
+    })
 });
+
+router.post('/changename',async function(req, res){
+    console.log(req.body);
+    changeUsername(req.body.username, req.body.cusername)
+    .then(function(results){
+        return res.status(201).send({
+            message: "change success!",
+        });
+    })
+    .catch(function(err){
+        console.log(err);
+        res.status(401).send({
+            message: "another username",
+        });
+    })
+});
+
+router.post('/checkname',validateUsername ,async function(req, res){
+    console.log(req.body);
+    searchUsername(req.body.username)
+    .then(function(rows){
+        console.log(rows);
+        return res.status(201).send({
+            message: "can change username",
+        });
+    })
+    .catch(function(err){
+        res.status(401).send({
+            message: "this already exist name",
+        });
+    })
+});
+
 
 insertUser = function(email, password, username) {
     return new Promise(function(resolve, reject){
@@ -67,7 +105,7 @@ insertUser = function(email, password, username) {
             else{
                 resolve(rows);
             }
-        })
+        });
     })
 }
 searchID = function(email, username) {
@@ -75,16 +113,34 @@ searchID = function(email, username) {
         const sql = 'select id, username from user where id=? or username=?';
         const params = [email,username];
         db.con.query(sql,params,function(err,rows){
-            if(rows===undefined)
+            if(rows.length===0)
             {
-                reject(new Error("error row is undefined"));
+                resolve(rows);
+                 
             } else{
-                resolve();
+                reject(new Error("already have person"));
             }
-        })
+        });
     })
 }
 
+searchUsername = function(username){
+    return new Promise(function(resolve, reject){
+        const sql = 'select username from user where username=?';
+        const params = [username];
+        db.con.query(sql, params, function(err,rows,results){
+            if(rows.length===0){
+                console.log("1");
+                resolve();
+            }
+            else{
+                console.log("2");
+                 
+                reject(new Error("error row is undefined"));
+            }
+        });
+    })
+}
 loginID = function(email, password) {
     return new Promise(function(resolve, reject){
         const sql = 'select username from user where id=? and password=?';
@@ -100,4 +156,18 @@ loginID = function(email, password) {
     })
 }
 
+changeUsername = function(username,cusername) {
+    return new Promise(function(resolve, reject){
+        const sql = 'update user set username=? where username=?';
+        const params = [cusername, username];
+        db.con.query(sql, params, function(err,rows,results){
+            if(err){
+                reject(new Error("change error"));
+            }
+            else{
+                resolve(rows);
+            }
+        })
+    })
+}
 module.exports = router;

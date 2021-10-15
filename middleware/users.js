@@ -23,6 +23,7 @@ module.exports = {
     },
     isLoggedIn: (req, res, next) => {
         const token = req.body.token;
+         
         if(!token){
             return res.status(403).send({
                 message: "a token is required for authentication",
@@ -31,12 +32,23 @@ module.exports = {
         try{
             const decoded = jwt.verify(token,'SECRETKEY');
             req.username = decoded;
+            console.log("111");
             console.log(decoded);
         } catch(err){
             return res.status(401).send({
                 message: "Invalid token",
             });
         }
-        return next();
+        console.log("222");
+        next();
+    },
+    validateUsername : (req, res, next) => {
+        //username min length 3
+        if(!req.body.username || req.body.username.length <3){
+            return res.status(400).send({
+                message: "3charater upper",
+            });
+        }
+        next();
     }
 }
