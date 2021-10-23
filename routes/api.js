@@ -35,10 +35,11 @@ router.post('/sign-up',validateRegister ,async function(req,res){
 router.post('/login', async function(req,res){
     loginID(req.body.email, req.body.password)
     .then(function(results){ 
-        const username=results[0].username;
+        const username = results[0].username;
+        const email=results[0].email;
         const token = jwt.sign({
-            username: username,
-        },'SECRETKEY',{expiresIn:"5m"});
+            email: email,
+        },'SECRETKEY',{expiresIn:"30d"});
         return res.status(201).send({
             message: "login success",
             username,
@@ -61,38 +62,28 @@ router.post('/auth', isLoggedIn ,async function(req,res){
     })
 });
 
-router.post('/changename',async function(req, res){
-    console.log(req.body);
-    changeUsername(req.body.username, req.body.cusername)
+router.post('/changename',validateUsername ,isLoggedIn, async function(req, res){
+    searchUsername(req.body.cusername)
     .then(function(results){
-        return res.status(201).send({
-            message: "change success!",
+        changeUsername(req.body.username, req.body.cusername)
+        .then(function(results){
+            return res.status(201).send({
+                message: "change success!",
+            });
+        })
+        .catch(function(err){
+            console.log(err);
+            res.status(401).send({
+            message: "change name error please contact manger",
         });
-    })
-    .catch(function(err){
-        console.log(err);
-        res.status(401).send({
-            message: "another username",
-        });
-    })
-});
-
-router.post('/checkname',validateUsername ,async function(req, res){
-    console.log(req.body);
-    searchUsername(req.body.username)
-    .then(function(rows){
-        console.log(rows);
-        return res.status(201).send({
-            message: "can change username",
-        });
+        })
     })
     .catch(function(err){
         res.status(401).send({
-            message: "this already exist name",
+            message: "already exists name",
         });
-    })
+    }) 
 });
-
 
 insertUser = function(email, password, username) {
     return new Promise(function(resolve, reject){
@@ -124,18 +115,15 @@ searchID = function(email, username) {
     })
 }
 
-searchUsername = function(username){
+searchUsername = function(cusername){
     return new Promise(function(resolve, reject){
         const sql = 'select username from user where username=?';
-        const params = [username];
+        const params = [cusername];
         db.con.query(sql, params, function(err,rows,results){
             if(rows.length===0){
-                console.log("1");
                 resolve();
             }
             else{
-                console.log("2");
-                 
                 reject(new Error("error row is undefined"));
             }
         });

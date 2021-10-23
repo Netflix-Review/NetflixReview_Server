@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
     validateRegister: (req, res, next) => {
-        //username min length 3
+        //username min length 3 max length 15
         //password min 6chars
-        if(!req.body.username || req.body.username.length < 3){
+        if(!req.body.username || req.body.username.length < 3 || req.body.username.length>15){
             return res.status(400).send({
                 message: "3charater",
             });
@@ -32,19 +32,17 @@ module.exports = {
         try{
             const decoded = jwt.verify(token,'SECRETKEY');
             req.username = decoded;
-            console.log("111");
             console.log(decoded);
         } catch(err){
             return res.status(401).send({
                 message: "Invalid token",
             });
         }
-        console.log("222");
         next();
     },
     validateUsername : (req, res, next) => {
-        //username min length 3
-        if(!req.body.username || req.body.username.length <3){
+        //username min length 3 max length 15
+        if(!req.body.cusername || req.body.cusername.length <3 || req.body.cusername.length>15){
             return res.status(400).send({
                 message: "3charater upper",
             });
