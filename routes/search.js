@@ -5,9 +5,9 @@ var db = require('../db');
 router.post('/', async function(req,res){
     console.log(req.body.text);
      var promise = new Promise(function(resolve, reject){
-         const sql = 'select id from tv where title like ?';
+         const sql = 'select * from tv where title like ?;'+ 'select * from drama where title like ?;'+ 'select * from movie where title like ?;';
          const params = [req.body.text];
-         db.con.query(sql,'%'+params+'%',function(err, results){
+         db.con.query(sql,['%'+params+'%','%'+params+'%','%'+params+'%'],function(err, results){
              if(err){
                  console.log(err);
                  reject(err);
@@ -16,15 +16,16 @@ router.post('/', async function(req,res){
          });
      });
      promise.then(function(results){
-         console.log(results.length);
-         if(results.length===0){
+         const count = results[0].length + results[1].length + results[2].length;
+         if(Object.keys(results[0].length===0)) console.log("null");
+         if(count===0){
              res.status(401).send({
                  message:"not found",
              });
          }
          else{
             res.status(201).send({
-                results,
+                results
             });
         }
      }), function(err){

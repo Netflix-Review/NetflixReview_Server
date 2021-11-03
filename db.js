@@ -6,7 +6,8 @@ const con = mysql.createConnection({
     user:'root',
     password:'slrlal1!',
     port:3306,
-    database:'netflix'
+    database:'netflix',
+    multipleStatements: true
 });
 
 con.connect((err) => {
