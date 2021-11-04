@@ -49,6 +49,7 @@ function getTvRank(callback){
         callback(rows);
     })
 }
+
 function recommendPlus(id,callback){
     con.query(`update tv set rank=rank+1 where id=${id}`,(err,row,fields)=>{
         if(err) throw err;
