@@ -13,18 +13,28 @@ router.post('/',function(req,res){
       connect.query(`update movie set movie.rank=movie.rank+1 where id='${id}'`,function (err,result){
         if(err) console.log("Up error"+err);
     });
-    connect.query(`select movie.rank from movie where id='${id}'`,function(err,rows,result){
-      res.send(rows);
-      console.log(rows);
+    const sql = 'select movie.rank, movie.rankdown from movie where id=?';
+    connect.query(sql,[id],function(err,rows,results){
+      console.log(rows[0].rank);
+      const RankResult = (rows[0].rank/(rows[0].rank+rows[0].rankdown))*100;
+      console.log(RankResult);
+      res.status(201).send({
+        RankResult,
+      })
     });
   }
   else if(rank==='Down'){
       connect.query(`update movie set movie.rank=movie.rank-1 where id='${id}'`,function (err,result){
         if(err) console.log("Down err"+err);
     });
-    connect.query(`select movie.rank from movie where id='${id}'`,function(err,rows,result){
-        res.send(rows);
-        console.log(rows);
+    const sql = 'select movie.rank, movie.rankdown from movie where id=?';
+    connect.query(sql,[id],function(err,rows,results){
+      console.log(rows[0].rank);
+      const RankResult = (rows[0].rank/(rows[0].rank+rows[0].rankdown))*100;
+      console.log(RankResult);
+      res.status(201).send({
+        RankResult,
+      })
     });
   }
 })

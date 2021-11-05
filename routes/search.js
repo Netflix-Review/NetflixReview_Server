@@ -7,26 +7,25 @@ router.post('/', async function(req,res){
      var promise = new Promise(function(resolve, reject){
          const sql = 'select * from tv where title like ?;'+ 'select * from drama where title like ?;'+ 'select * from movie where title like ?;';
          const params = [req.body.text];
-         db.con.query(sql,['%'+params+'%','%'+params+'%','%'+params+'%'],function(err, results){
+         db.con.query(sql,['%'+params+'%','%'+params+'%','%'+params+'%'],function(err,rows ,results){
              if(err){
                  console.log(err);
                  reject(err);
              }
-             resolve(results);
+             resolve(rows);
          });
      });
-     promise.then(function(results){
-         const count = results[0].length + results[1].length + results[2].length;
-         if(Object.keys(results[0].length===0)) console.log("null");
+     promise.then(function(rows){
+         const count = rows[0].length + rows[1].length + rows[2].length;
+         if(Object.keys(rows[0].length===0)) console.log("null");
+
          if(count===0){
              res.status(401).send({
                  message:"not found",
              });
          }
          else{
-            res.status(201).send({
-                results,
-            });
+            res.send(rows);
         }
      }), function(err){
          throw err;

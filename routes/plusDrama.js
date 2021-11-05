@@ -13,18 +13,28 @@ router.post('/',function(req,res){
       connect.query(`update drama set drama.rank=drama.rank+1 where id='${id}'`,function (err,result){
         if(err) console.log("Up error"+err);
     });
-    connect.query(`select drama.rank from drama where id='${id}'`,function(err,rows,result){
-      res.send(rows);
-      console.log(rows);
+    const sql = 'select drama.rank, drama.rankdown from drama where id=?';
+    connect.query(sql,[id],function(err,rows,results){
+      console.log(rows[0].rank);
+      const RankResult = (rows[0].rank/(rows[0].rank+rows[0].rankdown))*100;
+      console.log(RankResult);
+      res.status(201).send({
+        RankResult,
+      })
     });
   }
   else if(rank==='Down'){
       connect.query(`update drama set drama.rank=drama.rank-1 where id='${id}'`,function (err,result){
         if(err) console.log("Down err"+err);
     });
-    connect.query(`select drama.rank from drama where id='${id}'`,function(err,rows,result){
-        res.send(rows);
-        console.log(rows);
+    const sql = 'select drama.rank, drama.rankdown from drama where id=?';
+    connect.query(sql,[id],function(err,rows,results){
+      console.log(rows[0].rank);
+      const RankResult = (rows[0].rank/(rows[0].rank+rows[0].rankdown))*100;
+      console.log(RankResult);
+      res.status(201).send({
+        RankResult,
+      })
     });
   }
 })
