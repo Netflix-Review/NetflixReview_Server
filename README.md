@@ -142,7 +142,7 @@ IOS App Netflix tv, drama, movie etc recommend and User writes a review.
 
 </aside>
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e73d42b8-25ff-4c23-80a8-b3ed2bb2cbcb/Untitled.png)
+![Untitled](https://user-images.githubusercontent.com/81510864/141757433-0432fc59-5ab2-4c82-8ec9-3797afd46d22.png)
 
 - http 요청을 받을 때 Route에서 DB를 요청하여 MySQL에 접속하여 필요한 데이터를 조회, 삽입, 수정, 삭제 등을 수행한 결과를 Route로 반환한다.
 - 반환 받은 데이터를 앱으로 전송해준다.
@@ -187,8 +187,8 @@ const con = mysql.createConnection({
 1. 테이블
 - 영상 관련 데이터 테이블
 
-    ![Untitled](https://user-images.githubusercontent.com/81510864/141757433-0432fc59-5ab2-4c82-8ec9-3797afd46d22.png)
-    
+  ![Untitled (1)](https://user-images.githubusercontent.com/81510864/141757984-8fad5e88-d220-4bfe-849f-e6744cc0e8ca.png)
+   
     - id = 드라마, 영화의 고유 키 값
     - title = 제목
     - post = 포스트 사진
@@ -204,7 +204,8 @@ const con = mysql.createConnection({
     
 - 유저 데이터 테이블
     
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5a0d73f1-1222-4e4d-bebf-8d314599fd17/Untitled.png)
+    ![Untitled (2)](https://user-images.githubusercontent.com/81510864/141758082-703b5b1f-438a-4918-a9cf-5efee85ee489.png)
+
     
     - id  - 이메일 아이디
     - password - 패스워드
